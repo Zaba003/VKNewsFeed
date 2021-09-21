@@ -20,6 +20,12 @@ class AuthService: NSObject, VKSdkDelegate, VKSdkUIDelegate {
     private let appId = "7956600"
     private let vkSdk: VKSdk
     
+    weak var delegate: AuthServiceDelegate?
+    
+    var token: String? {
+        return VKSdk.accessToken()?.accessToken
+    }
+    
     override init() {
         vkSdk = VKSdk.initialize(withAppId: appId)
         super.init()
@@ -28,13 +34,14 @@ class AuthService: NSObject, VKSdkDelegate, VKSdkUIDelegate {
         vkSdk.uiDelegate = self
     }
     
-    weak var delegate: AuthServiceDelegate?
+    
     
     func wakeUpSession() {
-        let scope = ["offline"]
+        let scope = ["wall", "friends"]
+        
         VKSdk.wakeUpSession(scope) { [delegate] (state, error) in
             switch state {
-
+            
             case .initialized:
                 print("initialized")
                 VKSdk.authorize(scope)

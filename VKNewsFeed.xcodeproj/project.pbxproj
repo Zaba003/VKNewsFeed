@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D462BE5726F982C200756A3C /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D462BE5626F982C200756A3C /* NetworkService.swift */; };
+		D462BE5926F9845A00756A3C /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = D462BE5826F9845A00756A3C /* API.swift */; };
+		D462BE5C26F9A61C00756A3C /* FeedResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = D462BE5B26F9A61C00756A3C /* FeedResponse.swift */; };
 		D477651326F8FB890053DC26 /* FeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D477651226F8FB890053DC26 /* FeedViewController.swift */; };
 		D477651526F8FBA80053DC26 /* FeedViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D477651426F8FBA80053DC26 /* FeedViewController.storyboard */; };
 		D4E61EBB26F8DAF000F8F503 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E61EBA26F8DAF000F8F503 /* AppDelegate.swift */; };
@@ -18,6 +21,7 @@
 		D4E61ED526F8E40A00F8F503 /* VKSdkFramework.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D4E61ED026F8E0E200F8F503 /* VKSdkFramework.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D4E61ED826F8E65F00F8F503 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E61ED726F8E65F00F8F503 /* AuthService.swift */; };
 		D4E61EDA26F8E8DF00F8F503 /* AuthViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D4E61ED926F8E8DF00F8F503 /* AuthViewController.storyboard */; };
+		D4EA7DB226F9B14E00B173D1 /* NetworkDataFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4EA7DB126F9B14E00B173D1 /* NetworkDataFetcher.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -35,6 +39,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		D462BE5626F982C200756A3C /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = NetworkService.swift; path = VKNewsFeed/NetworkService.swift; sourceTree = SOURCE_ROOT; };
+		D462BE5826F9845A00756A3C /* API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
+		D462BE5B26F9A61C00756A3C /* FeedResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedResponse.swift; sourceTree = "<group>"; };
 		D477651226F8FB890053DC26 /* FeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewController.swift; sourceTree = "<group>"; };
 		D477651426F8FBA80053DC26 /* FeedViewController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = FeedViewController.storyboard; sourceTree = "<group>"; };
 		D4E61EB726F8DAF000F8F503 /* VKNewsFeed.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VKNewsFeed.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -47,6 +54,7 @@
 		D4E61ED026F8E0E200F8F503 /* VKSdkFramework.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VKSdkFramework.framework; path = Carthage/Build/iOS/VKSdkFramework.framework; sourceTree = "<group>"; };
 		D4E61ED726F8E65F00F8F503 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
 		D4E61ED926F8E8DF00F8F503 /* AuthViewController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = AuthViewController.storyboard; sourceTree = "<group>"; };
+		D4EA7DB126F9B14E00B173D1 /* NetworkDataFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkDataFetcher.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,6 +69,26 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D462BE5526F9829B00756A3C /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				D462BE5A26F9A5F800756A3C /* Models */,
+				D4E61ED726F8E65F00F8F503 /* AuthService.swift */,
+				D462BE5626F982C200756A3C /* NetworkService.swift */,
+				D462BE5826F9845A00756A3C /* API.swift */,
+				D4EA7DB126F9B14E00B173D1 /* NetworkDataFetcher.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		D462BE5A26F9A5F800756A3C /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				D462BE5B26F9A61C00756A3C /* FeedResponse.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		D477651626F8FD3D0053DC26 /* FeedViewController */ = {
 			isa = PBXGroup;
 			children = (
@@ -101,7 +129,7 @@
 			children = (
 				D4E61EBA26F8DAF000F8F503 /* AppDelegate.swift */,
 				D4E61EBC26F8DAF000F8F503 /* SceneDelegate.swift */,
-				D4E61ED726F8E65F00F8F503 /* AuthService.swift */,
+				D462BE5526F9829B00756A3C /* Services */,
 				D477651626F8FD3D0053DC26 /* FeedViewController */,
 				D477651726F8FD6F0053DC26 /* Auth */,
 				D4E61EC326F8DAF600F8F503 /* Assets.xcassets */,
@@ -213,11 +241,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D462BE5C26F9A61C00756A3C /* FeedResponse.swift in Sources */,
 				D4E61EBF26F8DAF000F8F503 /* AuthViewController.swift in Sources */,
 				D4E61EBB26F8DAF000F8F503 /* AppDelegate.swift in Sources */,
 				D477651326F8FB890053DC26 /* FeedViewController.swift in Sources */,
 				D4E61EBD26F8DAF000F8F503 /* SceneDelegate.swift in Sources */,
+				D462BE5726F982C200756A3C /* NetworkService.swift in Sources */,
+				D4EA7DB226F9B14E00B173D1 /* NetworkDataFetcher.swift in Sources */,
 				D4E61ED826F8E65F00F8F503 /* AuthService.swift in Sources */,
+				D462BE5926F9845A00756A3C /* API.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
