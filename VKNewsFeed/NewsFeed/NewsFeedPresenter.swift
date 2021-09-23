@@ -9,67 +9,96 @@
 import UIKit
 
 protocol NewsFeedPresentationLogic {
-    func presentData(response: NewsFeed.Model.Response.ResponseType)
+  func presentData(response: NewsFeed.Model.Response.ResponseType)
 }
 
 class NewsFeedPresenter: NewsFeedPresentationLogic {
+    
     weak var viewController: NewsFeedDisplayLogic?
+    var cellLayoutCalculator: FeedCellLayoutCalculatorProtocol = FeedCellLayoutCalculator()
     
     let dateFormatter: DateFormatter = {
-        let dt = DateFormatter()
+       let dt = DateFormatter()
         dt.locale = Locale(identifier: "ru_RU")
         dt.dateFormat = "d MMM 'в' HH:mm"
         return dt
     }()
-    
-    func presentData(response: NewsFeed.Model.Response.ResponseType) {
-        switch response {
-       
-        case .presentNewsFeed(let feed):
-            
-            let cells = feed.items.map { (feedItem) in
-                cellViewModel(from: feedItem, profiles: feed.profiles, groups: feed.groups)
-            }
-            
-            let feedViewModel = FeedViewModel.init(cells: cells)
-            viewController?.displayData(viewModel: NewsFeed.Model.ViewModel.ViewModelData.displayNewsFeed(feedViewModel: feedViewModel))
+  
+  func presentData(response: NewsFeed.Model.Response.ResponseType) {
+  
+    switch response {
+    case .presentNewsFeed(let feed, let revealdedPostIds):
+                
+        let cells = feed.items.map { (feedItem) in
+            cellViewModel(from: feedItem, profiles: feed.profiles, groups: feed.groups, revealdedPostIds: revealdedPostIds)
         }
+        let feedViewModel = FeedViewModel.init(cells: cells)
+        viewController?.displayData(viewModel: NewsFeed.Model.ViewModel.ViewModelData.displayNewsFeed(feedViewModel: feedViewModel))
+    case .presentUserInfo(user: let user):
+        let userViewModel = UserViewModel.init(photoUrlString: user?.photo100)
+        viewController?.displayData(viewModel: NewsFeed.Model.ViewModel.ViewModelData.displayUser(userViewModel: userViewModel))
     }
+  }
     
-    private func cellViewModel(from feedItem: FeedItem, profiles: [Profile], groups: [Group]) -> FeedViewModel.Cell {
+    private func cellViewModel(from feedItem: FeedItem, profiles: [Profile], groups: [Group], revealdedPostIds: [Int]) -> FeedViewModel.Cell {
         
         let profile = self.profile(for: feedItem.sourceId, profiles: profiles, groups: groups)
         
-        let photoAttachment = self.photoAttachment(feedItem: feedItem)
+        let photoAttachements = self.photoAttachements(feedItem: feedItem)
         
         let date = Date(timeIntervalSince1970: feedItem.date)
         let dateTitle = dateFormatter.string(from: date)
         
-        return FeedViewModel.Cell.init(iconUrlString: profile.photo,
+        let isFullSized = revealdedPostIds.contains { (postId) -> Bool in
+            return postId == feedItem.postId
+        }
+        
+        //let isFullSized = revealdedPostIds.contains(feedItem.postId) // краткий вариант записи
+        
+        let sizes = cellLayoutCalculator.sizes(postText: feedItem.text, photoAttachements: photoAttachements, isFullSizedPost: isFullSized)
+        
+        return FeedViewModel.Cell.init(postId: feedItem.postId,
+                                       iconUrlString: profile.photo,
                                        name: profile.name,
                                        date: dateTitle,
                                        text: feedItem.text,
-                                       likes: String(feedItem.likes?.count ?? 0),
-                                       comments: String(feedItem.comments?.count ?? 0),
-                                       shares: String(feedItem.reposts?.count ?? 0),
-                                       views: String(feedItem.views?.count ?? 0),
-                                       photoAttachment: photoAttachment)
-    }
-    private func profile(for sourseId: Int, profiles: [Profile], groups: [Group]) -> ProfileRepresentable {
-        let profilesOrGroups: [ProfileRepresentable] = sourseId >= 0 ? profiles : groups
-        let normalSourseId = sourseId >= 0 ? sourseId : -sourseId
-        let profileRepresentable = profilesOrGroups.first { (myProfileRepresentable) -> Bool in
-            myProfileRepresentable.id == normalSourseId
-        }
-        return profileRepresentable!
+                                       likes: formattedCounter(feedItem.likes?.count),
+                                       comments: formattedCounter(feedItem.comments?.count),
+                                       shares: formattedCounter(feedItem.reposts?.count),
+                                       views: formattedCounter(feedItem.views?.count),
+                                       photoAttachements: photoAttachements,
+                                       sizes: sizes)
     }
     
-    private func photoAttachment(feedItem: FeedItem) -> FeedViewModel.FeedCellPhotoAttachment? {
-        guard let photos = feedItem.attachments?.compactMap({ (attachment) in
-            attachment.photo
-        }), let firstPhoto = photos.first else {
-            return nil
+    private func formattedCounter(_ counter: Int?) -> String? {
+        guard let counter = counter, counter > 0 else { return nil }
+        var counterString = String(counter)
+        if 4...6 ~= counterString.count {
+            counterString = String(counterString.dropLast(3)) + "K"
+        } else if counterString.count > 6 {
+            counterString = String(counterString.dropLast(6)) + "M"
         }
-        return FeedViewModel.FeedCellPhotoAttachment.init(photoUrlString: firstPhoto.srcBIG, width: firstPhoto.width, height: firstPhoto.height)
+        return counterString
+    }
+    
+    private func profile(for sourseId: Int, profiles: [Profile], groups: [Group]) -> ProfileRepresentable {
+        
+        let profilesOrGroups: [ProfileRepresentable] = sourseId >= 0 ? profiles : groups
+        let normalSourseId = sourseId >= 0 ? sourseId : -sourseId
+        let profileRepresenatable = profilesOrGroups.first { (myProfileRepresenatable) -> Bool in
+            myProfileRepresenatable.id == normalSourseId
+        }
+        return profileRepresenatable!
+    }
+        
+    private func photoAttachements(feedItem: FeedItem) -> [FeedViewModel.FeedCellPhotoAttachment] {
+        guard let attachments = feedItem.attachments else { return [] }
+        
+        return attachments.compactMap({ (attachment) -> FeedViewModel.FeedCellPhotoAttachment? in
+            guard let photo = attachment.photo else { return nil }
+            return FeedViewModel.FeedCellPhotoAttachment.init(photoUrlString: photo.srcBIG,
+                                                              width: photo.width,
+                                                              height: photo.height)
+        })
     }
 }

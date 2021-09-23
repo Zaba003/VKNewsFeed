@@ -15,6 +15,7 @@ struct FeedResponse: Decodable {
     var items: [FeedItem]
     var profiles: [Profile]
     var groups: [Group]
+    var nextFrom: String?
 }
 
 struct FeedItem: Decodable {
@@ -34,7 +35,6 @@ struct Attachment: Decodable {
 }
 
 struct Photo: Decodable {
-    let id: Int
     let sizes: [PhotoSize]
     
     var height: Int {
@@ -50,7 +50,7 @@ struct Photo: Decodable {
     }
     
     private func getPropperSize() -> PhotoSize {
-        if let sizeX = sizes.first(where: { $0.type == "X" }){
+        if let sizeX = sizes.first(where: { $0.type == "x" }){
             return sizeX
         } else if let fallBackSize = sizes.last {
             return fallBackSize

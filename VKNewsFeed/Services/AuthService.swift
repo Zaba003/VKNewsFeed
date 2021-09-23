@@ -6,9 +6,9 @@
 //
 
 import Foundation
-import VKSdkFramework
+import VK_ios_sdk
 
-protocol AuthServiceDelegate: class {
+protocol AuthServiceDelegate: AnyObject {
     func authServiceShouldShow(viewController: UIViewController)
     func authServiceSignIn()
     func authServiceSignInDidFail()
@@ -24,6 +24,10 @@ class AuthService: NSObject, VKSdkDelegate, VKSdkUIDelegate {
     
     var token: String? {
         return VKSdk.accessToken()?.accessToken
+    }
+    
+    var userId: String? {
+        return VKSdk.accessToken()?.userId
     }
     
     override init() {

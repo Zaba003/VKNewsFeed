@@ -17,11 +17,20 @@ protocol FeedCellViewModel {
     var comments: String? { get }
     var shares: String? { get }
     var views: String? { get }
-    var photoAttachment: FeedCellPhotoAttachmentViewModel? { get }
+    var photoAttachements: [FeedCellPhotoAttachementViewModel] { get }
+    var sizes: FeedCellSizes { get }
     
 }
 
-protocol FeedCellPhotoAttachmentViewModel {
+protocol FeedCellSizes {
+    var postLabelFrame: CGRect { get }
+    var attachmentFrame: CGRect { get }
+    var bottomViewFrame: CGRect { get }
+    var totalHeight: CGFloat { get }
+    var moreTextButtonFrame: CGRect { get }
+}
+
+protocol FeedCellPhotoAttachementViewModel {
     var photoUrlString: String? { get }
     var width: Int { get }
     var height: Int { get }
@@ -29,48 +38,65 @@ protocol FeedCellPhotoAttachmentViewModel {
 
 class NewsFeedCell: UITableViewCell {
     
-    static let reuseID = "NewsFeedCell"
+    static let reuseId = "NewsFeedCell"
     
     
-    @IBOutlet var cardView: UIView!
-    @IBOutlet var iconImageView: WebImageView!
-    @IBOutlet var nameLabel: UILabel!
-    @IBOutlet var dateLabel: UILabel!
-    @IBOutlet var postLabel: UILabel!
-    @IBOutlet var postImageView: WebImageView!
-    @IBOutlet var lakesLabel: UILabel!
-    @IBOutlet var commentsLabel: UILabel!
-    @IBOutlet var sharesLabel: UILabel!
-    @IBOutlet var viewsLabel: UILabel!
+    @IBOutlet weak var cardView: UIView!
+    @IBOutlet weak var iconImageView: WebImageView!
+    @IBOutlet weak var nameLabel: UILabel!
+    @IBOutlet weak var dateLabel: UILabel!
+    @IBOutlet weak var postLabel: UILabel!
+    @IBOutlet weak var postImageView: WebImageView!
+    @IBOutlet weak var lakesLabel: UILabel!
+    @IBOutlet weak var commentsLabel: UILabel!
+    @IBOutlet weak var sharesLabel: UILabel!
+    @IBOutlet weak var viewsLabel: UILabel!
+    @IBOutlet weak var bottomView: UIView!
+    
+    override func prepareForReuse() {
+        iconImageView.set(imageURL: nil)
+        postImageView.set(imageURL: nil)
+    }
     
     override func awakeFromNib() {
         super.awakeFromNib()
         
-        iconImageView.layer.cornerRadius = iconImageView.frame.width / 2
-        iconImageView.clipsToBounds = true
+        iconImageView?.layer.cornerRadius = iconImageView.frame.width / 2
+        iconImageView?.clipsToBounds = true
         
-        cardView.layer.cornerRadius = 10
-        cardView.clipsToBounds = true
+        cardView?.layer.cornerRadius = 10
+        cardView?.clipsToBounds = true
         
-        backgroundColor = .white
+        backgroundColor = .clear
         selectionStyle = .none
     }
     
-    func set(viewModel: FeedCellViewModel) {
-        iconImageView.set(imageURL: viewModel.iconUrlString)
-        nameLabel.text = viewModel.name
-        dateLabel.text = viewModel.date
-        postLabel.text = viewModel.text
-        lakesLabel.text = viewModel.likes
-        commentsLabel.text = viewModel.comments
-        sharesLabel.text = viewModel.shares
-        viewsLabel.text = viewModel.views
-        
-        if let photoAttachment = viewModel.photoAttachment {
-            postImageView.set(imageURL: photoAttachment.photoUrlString)
-            postImageView.isHidden = false
-        } else {
-            postImageView.isHidden = true
-        }
-    }
+//    func set(viewModel: FeedCellViewModel) {
+//        iconImageView.set(imageURL: viewModel.iconUrlString)
+//        nameLabel.text = viewModel.name
+//        dateLabel.text = viewModel.date
+//        postLabel.text = viewModel.text
+//        lakesLabel.text = viewModel.likes
+//        commentsLabel.text = viewModel.comments
+//        sharesLabel.text = viewModel.shares
+//        viewsLabel.text = viewModel.views
+//
+//        postLabel.frame = viewModel.sizes.postLabelFrame
+//        postImageView.frame = viewModel.sizes.attachmentFrame
+//        bottomView.frame = viewModel.sizes.bottomViewFrame
+//
+//        //        if let photoAttachment = viewModel.photoAttachment {
+//        //            postImageView.set(imageURL: photoAttachment.photoUrlString)
+//        //            postImageView.isHidden = false
+//        //        } else {
+//        //            postImageView.isHidden = true
+//        //        }
+//
+//        if let photoAttachment = viewModel.photoAttachements.first, viewModel.photoAttachements.count == 1 {
+//            postImageView.set(imageURL: photoAttachment.photoUrlString)
+//            postImageView.isHidden = false
+//        } else {
+//            postImageView.isHidden = true
+//        }
+//    }
 }
